@@ -1,0 +1,69 @@
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --font-sans: Satoshi, sans-serif;
+  --font-heading: Satoshi, sans-serif;
+  
+  --color-primary: #F97316;
+  --color-secondary: #FB923C;
+  --color-accent: #FB923C;
+}
+
+/* Custom minimal card styles with soft orange shadow glow */
+.glass-card {
+  background: #ffffff;
+  border: 1px solid rgba(249, 115, 22, 0.05);
+  box-shadow: 0 16px 40px -12px rgba(249, 115, 22, 0.08), 0 4px 16px -6px rgba(0, 0, 0, 0.03);
+}
+
+.glass-card-hover {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 48px -12px rgba(249, 115, 22, 0.12), 0 6px 20px -6px rgba(0, 0, 0, 0.04);
+  background: #ffffff;
+  border-color: rgba(249, 115, 22, 0.1);
+}
+
+/* Monospace fonts for Settings credentials block */
+.font-mono-jetbrains {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* Input styles conforming to Velix design guidelines */
+.antigravity-input {
+  background: #ffffff;
+  border: 1px solid rgba(249, 115, 22, 0.15);
+  border-radius: 12px;
+  outline: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.antigravity-input:focus {
+  border-color: #F97316;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.12);
+}
+
+/* Base custom font overrides */
+body {
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.02em;
+}
+
+/* Velocity Grid Background */
+.bg-grid-velocity {
+  background-size: 50px 50px;
+  background-image: 
+    linear-gradient(to right, rgba(249, 115, 22, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(249, 115, 22, 0.02) 1px, transparent 1px);
+}
+
