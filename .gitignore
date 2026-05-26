@@ -1,6 +1,10 @@
 /prd
 /ui
 
+# python
+__pycache__/
+*.py[cod]
+
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -27,6 +31,8 @@ app/*/build
 app/*.DS_Store
 app/*.pem
 
+
+app/*/.venv
 # debug
 app/*.npm-debug.log*
 app/*.yarn-debug.log*

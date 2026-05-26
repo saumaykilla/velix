@@ -1,0 +1,76 @@
+erDiagram
+    %% Core Relationships
+    PROFILE ||--o{ WORKSPACE : "creates (1:N)"
+    WORKSPACE ||--o| BRAND : "owns (1:1)"
+    WORKSPACE ||--o{ CAMPAIGN : "manages (1:N)"
+    
+    
+    %% Campaign Management
+    CAMPAIGN ||--|| STRATEGY : "guided by (1:1)"
+    CAMPAIGN ||--o{ PERSONA : "targets (1:N)"
+    CAMPAIGN ||--o{ ASSET : "includes (1:N)"
+
+    %% Table Definitions
+    %% profile is created after user creation in supabase
+    PROFILE {
+        uuid id PK
+        string full_name
+        timestamp created_at
+    }
+
+    WORKSPACE {
+        uuid id PK
+        uuid profile_id FK
+        string name
+        string website_url
+        timestamp created_at
+    }
+
+    BRAND {
+        uuid id PK
+        uuid workspace_id FK "Unique"
+        text core_mission
+        text target_audience
+        string[] personality_traits
+        jsonb brand_colors
+        jsonb competitor
+    }
+    %%COMPETITOR { string name string[] advantages}
+
+    CAMPAIGN {
+        uuid id PK
+        uuid workspace_id FK
+        string name
+        date start_date
+        string[] targeted_platform "Enum"
+        date end_date
+    }
+
+    STRATEGY {
+        uuid id PK
+        uuid campaign_id FK "Unique"
+        text objective
+        jsonb kpis
+    }
+
+    PERSONA {
+        uuid id PK
+        uuid campaign_id FK
+        string name
+        string role
+        jsonb demographics
+        string[] pain_points
+        string[] motivations
+    }
+
+    ASSET {
+        uuid id PK
+        uuid campaign_id FK
+        string platform "Enum"
+        string asset_type "Enum"
+        string media_url
+        text caption
+        string status "Enum"
+        string notes
+        boolean is_deleted
+    }
