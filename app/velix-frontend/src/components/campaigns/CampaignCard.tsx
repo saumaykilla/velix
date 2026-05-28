@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
 export interface Campaign {
   id: string;
@@ -44,10 +45,22 @@ const formatDate = (dateString: string) => {
 };
 
 export function CampaignCard({ campaign, onEdit, onDelete }: CampaignCardProps) {
+  const router = useRouter();
   const assetsCount = campaign.assetsCount || 0;
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.closest('button') || target.closest('a')) {
+      return;
+    }
+    router.push(`/campaigns/${campaign.id}`);
+  };
+
   return (
-    <div className="glass-panel border border-primary-container/10 rounded-xl p-6 glow-shadow table-row-hover transition-all duration-300 bg-white dark:bg-surface-container-lowest/30">
+    <div
+      onClick={handleCardClick}
+      className="glass-panel border border-primary-container/10 rounded-xl p-6 glow-shadow table-row-hover transition-all duration-300 bg-white dark:bg-surface-container-lowest/30 cursor-pointer"
+    >
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-8">
         {/* Left Side: Icon, Name, Date, Purpose */}
         <div className="flex items-center gap-4 flex-1 min-w-0">

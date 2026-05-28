@@ -138,16 +138,23 @@ export function CreateCampaignModal({ isOpen, onClose, onSuccess }: CreateCampai
 
     try {
       const finalPurpose = data.purpose === 'Other' ? data.customPurpose?.trim() : data.purpose;
-
-      const { error: insertError } = await supabase.from('campaign').insert({
-        workspace_id: activeWorkspaceId,
-        name: data.name.trim(),
-        targeted_platform: data.targetedPlatforms,
-        purpose: finalPurpose || null,
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+      const response = await fetch(`${backendUrl}/api/campaigns`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          workspace_id: activeWorkspaceId,
+          name: data.name.trim(),
+          targeted_platform: data.targetedPlatforms,
+          purpose: finalPurpose || '',
+        }),
       });
 
-      if (insertError) {
-        throw new Error(insertError.message);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || 'Failed to generate campaign. Please verify your brand setup.');
       }
 
       onSuccess();

@@ -5,3 +5,5 @@ pydantic-settings
 requests
 google-genai
 psycopg2-binary
+playwright
+html2text

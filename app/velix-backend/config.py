@@ -5,6 +5,8 @@ class Settings(BaseSettings):
     NIMBLE_API_KEY: str = ""
     GOOGLE_PROJECT_ID: str = ""  # Should be set by user or environment
     GOOGLE_LOCATION: str = "us-central1"
+    SUPABASE_URL: str = ""
+    SUPABASE_ANON_KEY: str = ""
 
     class Config:
         env_file = ".env"

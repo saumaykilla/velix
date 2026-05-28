@@ -5,6 +5,8 @@ from typing import Optional
 from services.crawler import CrawlerService
 from services.analyzer import AnalyzerService
 from services.database import DatabaseService
+from services.campaign_generator import CampaignGeneratorService
+from services.asset_generator import AssetGeneratorService
 
 app = FastAPI(title="Velix Onboarding API", version="1.0.0")
 
@@ -30,7 +32,7 @@ async def onboard_user(request: OnboardRequest):
         scraped_content = "Scraping unavailable for this domain."
         style_info = None
         try:
-            crawl_result = CrawlerService.extract_page_content(request.website_url)
+            crawl_result = await CrawlerService.extract_page_content(request.website_url)
             scraped_content = crawl_result.get("markdown", "")
             style_info = crawl_result.get("style_info", None)
             print("scraped content", scraped_content, '\n\n\n\n\n\n ')
@@ -84,3 +86,59 @@ async def onboard_user(request: OnboardRequest):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"An unexpected error occurred: {str(e)}"
         )
+
+class CreateCampaignRequest(BaseModel):
+    workspace_id: str
+    name: str
+    targeted_platform: list[str]
+    purpose: str
+
+@app.post("/api/campaigns", status_code=status.HTTP_201_CREATED)
+async def create_campaign_endpoint(request: CreateCampaignRequest):
+    try:
+        campaign_id = CampaignGeneratorService.generate_campaign_with_assets(
+            workspace_id=request.workspace_id,
+            name=request.name.strip(),
+            targeted_platform=request.targeted_platform,
+            purpose=request.purpose
+        )
+        return {
+            "status": "success",
+            "campaign_id": campaign_id
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+
+
+class GenerateAssetRequest(BaseModel):
+    workspace_id: str
+    platform: str
+
+@app.post("/api/campaigns/{campaign_id}/generate-asset", status_code=status.HTTP_201_CREATED)
+async def generate_asset_endpoint(campaign_id: str, request: GenerateAssetRequest):
+    try:
+        result = AssetGeneratorService.generate_asset_workflow(
+            workspace_id=request.workspace_id,
+            campaign_id=campaign_id,
+            platform=request.platform
+        )
+        if result.get("error"):
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=result["error"]
+            )
+        return {
+            "status": "success",
+            "asset_id": result.get("asset_id"),
+            "media_url": result.get("media_url"),
+            "caption": result.get("caption")
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
+

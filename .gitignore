@@ -48,3 +48,7 @@ app/*/.vercel
 # typescript
 app/*/*.tsbuildinfo
 app/*/*next-env.d.ts
+
+# generated styles
+styles.json
+app/velix-backend/styles.json
